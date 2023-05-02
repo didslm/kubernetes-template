@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: backend
+    spec:
+      volumes:
+        - name: dir
+          persistentVolumeClaim:
+            claimName: dir
+      containers:
+        - name: php
+          image: php:8.1-fpm
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: dir
+              mountPath: /var/www/html
