@@ -15,15 +15,27 @@ spec:
         app: php
         tier: backend
     spec:
-      volumes:
-        - name: dir
-          persistentVolumeClaim:
-            claimName: dir
+      initContainers:
+        - name: init-php
+          image: diarselimi/php-sample-api:1.0.6
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp -r /var/www/html/* /data &&
+              chown -R www-data:www-data /data
+          volumeMounts:
+            - name: tvc
+              mountPath: /data
       containers:
         - name: php
-          image: php:8.1-fpm
+          image: diarselimi/php-sample-api:1.0.6
           ports:
             - containerPort: 9000
           volumeMounts:
-            - name: dir
+            - name: tvc
               mountPath: /var/www/html
+      volumes:
+        - name: tvc
+          persistentVolumeClaim:
+            claimName: dir-test
