@@ -19,11 +19,7 @@ spec:
         - name: init-php
           image: diarselimi/php-sample-api:1.0.6
           command:
-            - /bin/sh
-            - -c
-            - |
-              cp -r /var/www/html/* /data &&
-              chown -R www-data:www-data /data
+            - cp -r /var/www/html/* /data && chown -R www-data:www-data /data
           volumeMounts:
             - name: tvc
               mountPath: /data
@@ -38,4 +34,4 @@ spec:
       volumes:
         - name: tvc
           persistentVolumeClaim:
-            claimName: dir-test
+            claimName: dir-test-2

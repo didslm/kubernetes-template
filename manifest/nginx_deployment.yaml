@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: ntvc
           persistentVolumeClaim:
-            claimName: dir-test
+            claimName: dir-test-2
         - name: config
           configMap:
             name: nginx-config
