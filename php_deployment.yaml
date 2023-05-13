@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: backend
+    spec:
+      initContainers:
+        - name: copy-project-files
+          image: diarselimi/php-sample-api:1.0.6
+          command: ["/bin/sh", "-c"]
+          args:
+            - cp -R /var/www/html /mnt
+          volumeMounts:
+            - name: tvc
+              mountPath: /mnt
+      containers:
+        - name: php
+          image: diarselimi/php-sample-api:1.0.6
+          command: ["/bin/sh", "-c"]
+          args:
+            - chmod -R 777 /var/www/html/var
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: tvc
+              mountPath: /var/www
+      volumes:
+        - name: tvc
+          persistentVolumeClaim:
+            claimName: project-storage
